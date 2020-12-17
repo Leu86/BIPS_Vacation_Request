@@ -23,3 +23,6 @@ hs_err_pid*
 
 # Visual Code Files
 .vscode
+
+# Readme
+README.md
