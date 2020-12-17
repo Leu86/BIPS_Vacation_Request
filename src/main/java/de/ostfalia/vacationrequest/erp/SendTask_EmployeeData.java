@@ -19,8 +19,6 @@ public class SendTask_EmployeeData implements JavaDelegate {
 
         RuntimeService runtimeService = execution.getProcessEngineServices().getRuntimeService();
         // name of the Message Event which receives the message       
-        //runtimeService.correlateMessage("Employee Data", key, hashMap);
-        //runtimeService.createMessageCorrelation("Employee Data").correlateWithResult();
         runtimeService.createMessageCorrelation("Employee Data")
         .processInstanceBusinessKey(key)
         .setVariables(hashMap)
