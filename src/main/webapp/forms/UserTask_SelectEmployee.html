@@ -1,0 +1,36 @@
+<form name="SelectEmployee" role="form">
+    <!-- kein Kunde ausgewählt -->
+    <div class="alert alert-danger">
+        <p>Bitte w&auml;hlen Sie einen bestehenden Mitarbeiter aus oder legen Sie einen neuen an, indem Sie <b>Mitarbeiter
+            anlegen</b> ausw&auml;hlen und die entsprechenden Daten eintragen.</p>
+    </div>
+    <div class="form-group">
+        <label>Mitarbeiter</label>
+        <select class="form-control"
+                cam-variable-name="EMPLOYEE_ID"
+                cam-variable-type="Integer"
+                cam-choices="AVAILABLE_EMPLOYEES">
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text"
+                class="form-control"
+                cam-variable-name="EMPLOYEE_NAME"
+                cam-variable-type="String"/>
+    </div>
+    <div class="form-group">
+        <label>Adresse</label>
+        <input type="text"
+                class="form-control"
+                cam-variable-name="EMPLOYEE_ADDRESS"
+                cam-variable-type="String"/>
+    </div>
+    <div class="form-group">
+        <label>E-Mail</label>
+        <input type="text"
+                class="form-control"
+                cam-variable-name="EMPLOYEE_MAIL"
+                cam-variable-type="String"/>
+    </div>
+</form>

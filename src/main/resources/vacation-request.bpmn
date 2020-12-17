@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:collaboration id="Collaboration_1mwhv73">
+    <bpmn:participant id="Participant_0k4tjhh" name="Employee (demo)" processRef="Employee_ProcessPool" />
+    <bpmn:participant id="Participant_1o0hms1" name="ERP" processRef="ERP_ProcessPool" />
+    <bpmn:messageFlow id="MessageFlow_1" name="1" sourceRef="SendTask_LoadEmployeeData" targetRef="MessageEvent_LoadEmployeeData" />
+    <bpmn:messageFlow id="MessageFlow_2" name="2" sourceRef="SendTask_EmployeeData" targetRef="MessageEvent_EmployeeData" />
+  </bpmn:collaboration>
+  <bpmn:process id="Employee_ProcessPool" name="" isExecutable="true">
+    <bpmn:startEvent id="Event_11gce4n">
+      <bpmn:outgoing>SequenceFlow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UserTask_SelectEmployee" name="Select Employee" camunda:formKey="embedded:app:forms/UserTask_SelectEmployee.html" camunda:assignee="demo">
+      <bpmn:incoming>SequenceFlow_2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="ServiceTask_LoadEmployees" name="Load Employees" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="de.ostfalia.vacationrequest.demo.ServiceTask_LoadEmployees">
+      <bpmn:incoming>SequenceFlow_1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1" name="1" sourceRef="Event_11gce4n" targetRef="ServiceTask_LoadEmployees" />
+    <bpmn:sequenceFlow id="SequenceFlow_2" name="2" sourceRef="ServiceTask_LoadEmployees" targetRef="UserTask_SelectEmployee" />
+    <bpmn:sequenceFlow id="SequenceFlow_13" name="13" sourceRef="UserTask_ShowEmployeeData" targetRef="Event_0hfbc4b" />
+    <bpmn:sequenceFlow id="SequenceFlow_3" name="3" sourceRef="UserTask_SelectEmployee" targetRef="SendTask_LoadEmployeeData" />
+    <bpmn:sendTask id="SendTask_LoadEmployeeData" name="Load Employee Data" camunda:class="de.ostfalia.vacationrequest.demo.SendTask_LoadEmployeeData">
+      <bpmn:incoming>SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="UserTask_ShowEmployeeData" name="Show Employee Data" camunda:formKey="embedded:app:forms/UserTask_ShowEmployee.html" camunda:assignee="demo">
+      <bpmn:incoming>SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_0hfbc4b">
+      <bpmn:incoming>SequenceFlow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_4" name="4" sourceRef="SendTask_LoadEmployeeData" targetRef="MessageEvent_EmployeeData" />
+    <bpmn:sequenceFlow id="SequenceFlow_12" name="12" sourceRef="MessageEvent_EmployeeData" targetRef="UserTask_ShowEmployeeData" />
+    <bpmn:intermediateCatchEvent id="MessageEvent_EmployeeData" name="Employee Data">
+      <bpmn:incoming>SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1iqu09q" messageRef="Message_08p4u7i" />
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:process id="ERP_ProcessPool" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:startEvent id="MessageEvent_LoadEmployeeData" name="Load Employee Data" camunda:asyncBefore="true">
+      <bpmn:outgoing>SequenceFlow_5</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_15bruo6" messageRef="Message_0lw0d7q" />
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1" name="Create Employee?" default="SequenceFlow_6">
+      <bpmn:incoming>SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_6</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_LoadEmployeeData" name="Load Employee Data" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_LoadEmployeeData">
+      <bpmn:incoming>SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_CreateEmployee" name="Create Employee" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_CreateEmployee">
+      <bpmn:incoming>SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_5" name="5" sourceRef="MessageEvent_LoadEmployeeData" targetRef="ExclusiveGateway_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_6" name="6: No" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_LoadEmployeeData" />
+    <bpmn:sequenceFlow id="SequenceFlow_7" name="7: Yes" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_CreateEmployee">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_8" name="8" sourceRef="ServiceTask_LoadEmployeeData" targetRef="ExclusiveGateway_2" />
+    <bpmn:sequenceFlow id="SequenceFlow_9" name="9" sourceRef="ServiceTask_CreateEmployee" targetRef="ExclusiveGateway_2" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_2">
+      <bpmn:incoming>SequenceFlow_8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sntzdf</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1sntzdf" name="9" sourceRef="ExclusiveGateway_2" targetRef="SendTask_EmployeeData" />
+    <bpmn:endEvent id="Event_0qzhytq">
+      <bpmn:incoming>SequenceFlow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="SendTask_EmployeeData" name="Employee Data" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_EmployeeData">
+      <bpmn:incoming>Flow_1sntzdf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_11</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="SequenceFlow_11" name="11" sourceRef="SendTask_EmployeeData" targetRef="Event_0qzhytq" />
+  </bpmn:process>
+  <bpmn:message id="Message_0lw0d7q" name="Load Employee Data" />
+  <bpmn:message id="Message_08p4u7i" name="Employee Data" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1mwhv73">
+      <bpmndi:BPMNShape id="Participant_0k4tjhh_di" bpmnElement="Participant_0k4tjhh" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1000" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_096dwgw_di" bpmnElement="SequenceFlow_12">
+        <di:waypoint x="778" y="150" />
+        <di:waypoint x="830" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="798" y="132" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ck24j1_di" bpmnElement="SequenceFlow_4">
+        <di:waypoint x="690" y="150" />
+        <di:waypoint x="742" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="132" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01bmq55_di" bpmnElement="SequenceFlow_3">
+        <di:waypoint x="550" y="150" />
+        <di:waypoint x="590" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="567" y="132" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b4pug0_di" bpmnElement="SequenceFlow_13">
+        <di:waypoint x="930" y="150" />
+        <di:waypoint x="992" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="955" y="132" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ldod0m_di" bpmnElement="SequenceFlow_2">
+        <di:waypoint x="410" y="150" />
+        <di:waypoint x="450" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="132" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0groux7_di" bpmnElement="SequenceFlow_1">
+        <di:waypoint x="258" y="150" />
+        <di:waypoint x="310" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="281" y="132" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_11gce4n_di" bpmnElement="Event_11gce4n">
+        <dc:Bounds x="222" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_11t5zux_di" bpmnElement="UserTask_SelectEmployee">
+        <dc:Bounds x="450" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bz063b_di" bpmnElement="ServiceTask_LoadEmployees">
+        <dc:Bounds x="310" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0elguhw_di" bpmnElement="SendTask_LoadEmployeeData">
+        <dc:Bounds x="590" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mhnit3_di" bpmnElement="UserTask_ShowEmployeeData">
+        <dc:Bounds x="830" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fuqdio_di" bpmnElement="Event_0hfbc4b">
+        <dc:Bounds x="992" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kq48uv_di" bpmnElement="MessageEvent_EmployeeData">
+        <dc:Bounds x="742" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="722" y="102" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1o0hms1_di" bpmnElement="Participant_1o0hms1" isHorizontal="true">
+        <dc:Bounds x="160" y="400" width="748" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0xf2ba7_di" bpmnElement="SequenceFlow_9">
+        <di:waypoint x="510" y="580" />
+        <di:waypoint x="570" y="580" />
+        <di:waypoint x="570" y="545" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="537" y="562" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06tb0a6_di" bpmnElement="SequenceFlow_8">
+        <di:waypoint x="510" y="460" />
+        <di:waypoint x="570" y="460" />
+        <di:waypoint x="570" y="495" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="537" y="442" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yc5l9r_di" bpmnElement="SequenceFlow_7">
+        <di:waypoint x="310" y="545" />
+        <di:waypoint x="310" y="580" />
+        <di:waypoint x="410" y="580" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="324" y="583" width="31" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iajg2h_di" bpmnElement="SequenceFlow_6">
+        <di:waypoint x="310" y="495" />
+        <di:waypoint x="310" y="460" />
+        <di:waypoint x="410" y="460" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="326" y="443" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qdq9zq_di" bpmnElement="SequenceFlow_5">
+        <di:waypoint x="248" y="520" />
+        <di:waypoint x="285" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="263" y="502" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sntzdf_di" bpmnElement="Flow_1sntzdf">
+        <di:waypoint x="595" y="520" />
+        <di:waypoint x="690" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="639" y="502" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_017f0aw_di" bpmnElement="SequenceFlow_11">
+        <di:waypoint x="790" y="520" />
+        <di:waypoint x="832" y="520" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="805" y="502" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0cm5pbu_di" bpmnElement="MessageEvent_LoadEmployeeData">
+        <dc:Bounds x="212" y="502" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="192" y="545" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dcb2hk_di" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds x="285" y="495" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="345" y="506" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1y6fps1_di" bpmnElement="ServiceTask_LoadEmployeeData">
+        <dc:Bounds x="410" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eis3o9_di" bpmnElement="ServiceTask_CreateEmployee">
+        <dc:Bounds x="410" y="540" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0f7fd4x_di" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
+        <dc:Bounds x="545" y="495" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qzhytq_di" bpmnElement="Event_0qzhytq">
+        <dc:Bounds x="832" y="502" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fl09lq_di" bpmnElement="SendTask_EmployeeData">
+        <dc:Bounds x="690" y="480" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1upj1pm_di" bpmnElement="MessageFlow_1">
+        <di:waypoint x="640" y="190" />
+        <di:waypoint x="640" y="346" />
+        <di:waypoint x="230" y="346" />
+        <di:waypoint x="230" y="502" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="446" y="353" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1waaovx_di" bpmnElement="MessageFlow_2">
+        <di:waypoint x="760" y="480" />
+        <di:waypoint x="760" y="168" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="717" y="306" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
