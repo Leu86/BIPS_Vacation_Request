@@ -11,22 +11,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-
 public class ServiceTask_LoadEmployees implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         Connection connection = DatabaseConnection.getConnection();
 
-        String query = "SELECT * FROM Mitarbeiter";
+        String query = "SELECT *, CONCAT(Vorname, ' ', Nachname) AS Name FROM mitarbeiter";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         Map<Integer, String> employees = new HashMap<>();
+
         while (resultSet.next()) {
             employees.put(resultSet.getInt("idMitarbeiter"), resultSet.getString("Name"));
         }
         employees.put(-1, "Mitarbeiter anlegen");
-
+        
         execution.setVariable("AVAILABLE_EMPLOYEES", Variables.objectValue(employees)
                 .serializationDataFormat(Variables.SerializationDataFormats.JSON)
                 .create());
