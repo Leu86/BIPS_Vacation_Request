@@ -42,11 +42,30 @@
     <bpmn:startEvent id="Employee_StartEvent_1">
       <bpmn:outgoing>Employee_SequenceFlow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="UserTask_RequestVacation" name="Request Vacation" camunda:formKey="embedded:app:forms/demo/UserTask_RequestVacation.html" camunda:assignee="demo">
+    <bpmn:userTask id="UserTask_RequestVacation" name="Request Vacation" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="EMPLOYEE_NAME" label="Sie können nun den Urlaub beantragen, indem Sie ein Start-/ und ein Enddatum angeben." type="string" defaultValue="${EMPLOYEE_FIRSTNAME} ${EMPLOYEE_SURNAME}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="REQUESTVACATION_START" label="Startdatum:" type="date">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="REQUESTVACATION_END" label="Enddatum:" type="date">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>Employee_SequenceFlow_6</bpmn:incoming>
       <bpmn:outgoing>Employee_SequenceFlow_7</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sendTask id="SendTask_RequestVacationData" name="Request Vacation Data" camunda:class="de.ostfalia.vacationrequest.demo.SendTask_RequestVacationDat">
+    <bpmn:sendTask id="SendTask_RequestVacationData" name="Request Vacation Data" camunda:asyncBefore="true" camunda:class="de.ostfalia.vacationrequest.demo.SendTask_RequestVacationData">
       <bpmn:incoming>Employee_SequenceFlow_7</bpmn:incoming>
       <bpmn:outgoing>Employee_SequenceFlow_8</bpmn:outgoing>
     </bpmn:sendTask>
@@ -93,7 +112,7 @@
     <bpmn:sequenceFlow id="Employee_SequenceFlow_8" name="8" sourceRef="SendTask_RequestVacationData" targetRef="EventBasedGateway_1" />
   </bpmn:process>
   <bpmn:process id="ERP_ProcessPool" isExecutable="true" camunda:isStartableInTasklist="false">
-    <bpmn:startEvent id="MessageEvent_LoadEmployeeData" name="Load Employee Data" camunda:asyncBefore="true">
+    <bpmn:startEvent id="MessageEvent_LoadEmployeeData" name="Load Employee Data" camunda:asyncBefore="true" camunda:asyncAfter="true">
       <bpmn:outgoing>ERP_SequenceFlow_1</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_15bruo6" messageRef="Message_0lw0d7q" />
     </bpmn:startEvent>
@@ -110,7 +129,7 @@
       <bpmn:incoming>ERP_SequenceFlow_5</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:intermediateCatchEvent id="MessageEvent_RequestVacationData" name="Request Vacation Data">
+    <bpmn:intermediateCatchEvent id="MessageEvent_RequestVacationData" name="Request Vacation Data" camunda:asyncBefore="true" camunda:asyncAfter="true">
       <bpmn:incoming>ERP_SequenceFlow_7</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_8</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1ifyu9y" messageRef="Message_1lr16pi" />
@@ -159,7 +178,7 @@
     <bpmn:sequenceFlow id="ERP_SequenceFlow_11" name="11" sourceRef="SendTask_RequestDeclined" targetRef="ERP_EndEvent_1" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_12" name="12: Yes" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_CheckCriticalTimezone" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_10" name="10: No" sourceRef="ExclusiveGateway_3" targetRef="SendTask_RequestDeclined">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VACATION_DAYS == 30}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="ERP_SequenceFlow_9" name="9" sourceRef="ServiceTask_CheckAvailableDays" targetRef="ExclusiveGateway_3" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_8" name="8" sourceRef="MessageEvent_RequestVacationData" targetRef="ServiceTask_CheckAvailableDays" />

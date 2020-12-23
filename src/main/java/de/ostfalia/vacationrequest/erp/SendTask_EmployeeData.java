@@ -17,6 +17,7 @@ public class SendTask_EmployeeData implements JavaDelegate {
         hashMap.put("EMPLOYEE_ZIPCODE", execution.getVariable("EMPLOYEE_ZIPCODE"));
         hashMap.put("EMPLOYEE_CITY", execution.getVariable("EMPLOYEE_CITY"));
         hashMap.put("EMPLOYEE_MAIL", execution.getVariable("EMPLOYEE_MAIL"));
+        hashMap.put("DEMO_BUSINESS_KEY", execution.getVariable("DEMO_BUSINESS_KEY"));
 
         String key = (String) execution.getVariable("DEMO_BUSINESS_KEY");
 
