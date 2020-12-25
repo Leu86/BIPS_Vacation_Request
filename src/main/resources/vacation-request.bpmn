@@ -27,7 +27,7 @@
       <bpmn:incoming>Employee_SequenceFlow_5</bpmn:incoming>
       <bpmn:outgoing>Employee_SequenceFlow_6</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sendTask id="SendTask_LoadEmployeeData" name="Load Employee Data" camunda:class="de.ostfalia.vacationrequest.demo.SendTask_LoadEmployeeData">
+    <bpmn:sendTask id="SendTask_LoadEmployeeData" name="Load Employee Data" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="de.ostfalia.vacationrequest.demo.SendTask_LoadEmployeeData">
       <bpmn:incoming>Employee_SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>Employee_SequenceFlow_4</bpmn:outgoing>
     </bpmn:sendTask>

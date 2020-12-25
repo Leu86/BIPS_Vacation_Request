@@ -25,5 +25,8 @@ public class ServiceTask_CheckAvailableDays implements JavaDelegate {
         resultSet.close();
         preparedStatement.close();
         connection.close();
+
+        // ZU TESTZWECKEN!!! Muss geändert werden.
+        execution.setVariable("REQUEST_DECISION", "abgelehnt");
     }
 }

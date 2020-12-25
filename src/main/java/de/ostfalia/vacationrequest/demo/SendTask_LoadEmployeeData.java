@@ -19,8 +19,9 @@ public class SendTask_LoadEmployeeData implements JavaDelegate {
         hashMap.put("EMPLOYEE_MAIL", execution.getVariable("EMPLOYEE_MAIL"));
         hashMap.put("DEMO_BUSINESS_KEY", execution.getVariable("DEMO_BUSINESS_KEY"));
 
+        String key = (String) execution.getVariable("DEMO_BUSINESS_KEY");
         RuntimeService runtimeService = execution.getProcessEngineServices().getRuntimeService();
         // name of the Message Event which receives the message
-        runtimeService.startProcessInstanceByMessage("Load Employee Data", hashMap);
+        runtimeService.startProcessInstanceByMessage("Load Employee Data", key, hashMap);
     }
 }

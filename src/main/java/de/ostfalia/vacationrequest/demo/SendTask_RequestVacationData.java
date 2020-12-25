@@ -13,9 +13,11 @@ public class SendTask_RequestVacationData implements JavaDelegate {
         hashMap.put("REQUESTVACATION_START", execution.getVariable("REQUESTVACATION_START"));
         hashMap.put("REQUESTVACATION_END", execution.getVariable("REQUESTVACATION_END"));
         
+        String key = (String) execution.getVariable("DEMO_BUSINESS_KEY");
         RuntimeService runtimeService = execution.getProcessEngineServices().getRuntimeService();
         // name of the Message Event which receives the message       
          runtimeService.createMessageCorrelation("Request Vacation Data")
+        .processInstanceBusinessKey(key)
         .setVariables(hashMap)
         .correlate(); 
     }
