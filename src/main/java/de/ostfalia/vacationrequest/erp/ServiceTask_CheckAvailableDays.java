@@ -20,7 +20,7 @@ public class ServiceTask_CheckAvailableDays implements JavaDelegate {
         ResultSet resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            execution.setVariable("VACATION_DAYS", resultSet.getInt("Anzahl_Urlaubstage"));
+            execution.setVariable("EMPLOYEE_VACATIONDAYS", resultSet.getInt("Anzahl_Urlaubstage"));
         }
         resultSet.close();
         preparedStatement.close();

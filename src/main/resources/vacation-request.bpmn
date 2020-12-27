@@ -135,53 +135,42 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_1ifyu9y" messageRef="Message_1lr16pi" />
     </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="ServiceTask_CheckAvailableDays" name="Check Available Days" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_CheckAvailableDays">
-      <bpmn:incoming>ERP_SequenceFlow_8</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_9</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_3" name="Days Available?" default="ERP_SequenceFlow_12">
       <bpmn:incoming>ERP_SequenceFlow_9</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_10</bpmn:outgoing>
-      <bpmn:outgoing>ERP_SequenceFlow_12</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="ERP_EndEvent_1">
-      <bpmn:incoming>ERP_SequenceFlow_11</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sendTask id="SendTask_RequestDeclined" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_RequestDeclined">
-      <bpmn:incoming>ERP_SequenceFlow_10</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_11</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:sendTask id="SendTask_RequestApproved" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_RequestApproved">
-      <bpmn:incoming>ERP_SequenceFlow_14</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_15</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_5" name="Critical Timezone?" default="ERP_SequenceFlow_14">
-      <bpmn:incoming>ERP_SequenceFlow_13</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_14</bpmn:outgoing>
-      <bpmn:outgoing>ERP_SequenceFlow_16</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_6">
-      <bpmn:incoming>ERP_SequenceFlow_15</bpmn:incoming>
-      <bpmn:incoming>ERP_SequenceFlow_17</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_18</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="ERP_EndEvent_2">
-      <bpmn:incoming>ERP_SequenceFlow_18</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:serviceTask id="ServiceTask_CheckCriticalTimezone" name="Check Critical Timezone" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_CheckCriticalTimezone">
-      <bpmn:incoming>ERP_SequenceFlow_12</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_13</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sendTask id="SendTask_CriticalTimezoneData" name="Critical Timezone Data" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_CriticalTimezoneData">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_3" name="Days Available?" default="ERP_SequenceFlow_14">
+      <bpmn:incoming>ERP_SequenceFlow_10</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_14</bpmn:outgoing>
+      <bpmn:outgoing>ERP_SequenceFlow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="SendTask_RequestApproved" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_RequestApproved">
       <bpmn:incoming>ERP_SequenceFlow_16</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_17</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_11" name="11" sourceRef="SendTask_RequestDeclined" targetRef="ERP_EndEvent_1" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_12" name="12: Yes" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_CheckCriticalTimezone" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_10" name="10: No" sourceRef="ExclusiveGateway_3" targetRef="SendTask_RequestDeclined">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${VACATION_DAYS == 30}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_9" name="9" sourceRef="ServiceTask_CheckAvailableDays" targetRef="ExclusiveGateway_3" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_8" name="8" sourceRef="MessageEvent_RequestVacationData" targetRef="ServiceTask_CheckAvailableDays" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_5" name="Critical Timezone?" default="ERP_SequenceFlow_16">
+      <bpmn:incoming>ERP_SequenceFlow_15</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_16</bpmn:outgoing>
+      <bpmn:outgoing>ERP_SequenceFlow_18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_6">
+      <bpmn:incoming>ERP_SequenceFlow_17</bpmn:incoming>
+      <bpmn:incoming>ERP_SequenceFlow_19</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="ERP_EndEvent_2">
+      <bpmn:incoming>ERP_SequenceFlow_20</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_CheckCriticalTimezone" name="Check Critical Timezone" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_CheckCriticalTimezone">
+      <bpmn:incoming>ERP_SequenceFlow_14</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_15</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="SendTask_CriticalTimezoneData" name="Critical Timezone Data" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_CriticalTimezoneData">
+      <bpmn:incoming>ERP_SequenceFlow_18</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_19</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_13" name="13" sourceRef="SendTask_RequestDeclined" targetRef="ERP_EndEvent_1" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_14" name="14: Yes" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_CheckCriticalTimezone" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_10" name="10" sourceRef="ServiceTask_CheckAvailableDays" targetRef="ExclusiveGateway_3" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_7" name="7" sourceRef="SendTask_EmployeeData" targetRef="MessageEvent_RequestVacationData" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_1" name="1" sourceRef="MessageEvent_LoadEmployeeData" targetRef="ExclusiveGateway_1" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_2" name="2: No" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_LoadEmployeeData" />
@@ -191,14 +180,14 @@
     <bpmn:sequenceFlow id="ERP_SequenceFlow_3" name="3" sourceRef="ServiceTask_LoadEmployeeData" targetRef="ExclusiveGateway_2" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_5" name="5" sourceRef="ServiceTask_CreateEmployee" targetRef="ExclusiveGateway_2" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_6" name="6" sourceRef="ExclusiveGateway_2" targetRef="SendTask_EmployeeData" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_13" name="13" sourceRef="ServiceTask_CheckCriticalTimezone" targetRef="ExclusiveGateway_5" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_14" name="14: No" sourceRef="ExclusiveGateway_5" targetRef="SendTask_RequestApproved" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_16" name="16: Yes" sourceRef="ExclusiveGateway_5" targetRef="SendTask_CriticalTimezoneData">
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_15" name="15" sourceRef="ServiceTask_CheckCriticalTimezone" targetRef="ExclusiveGateway_5" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_16" name="16: No" sourceRef="ExclusiveGateway_5" targetRef="SendTask_RequestApproved" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_18" name="18: Yes" sourceRef="ExclusiveGateway_5" targetRef="SendTask_CriticalTimezoneData">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_18" name="18" sourceRef="ExclusiveGateway_6" targetRef="ERP_EndEvent_2" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_15" name="15" sourceRef="SendTask_RequestApproved" targetRef="ExclusiveGateway_6" />
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_17" name="17" sourceRef="SendTask_CriticalTimezoneData" targetRef="ExclusiveGateway_6" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_20" name="20" sourceRef="ExclusiveGateway_6" targetRef="ERP_EndEvent_2" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_17" name="17" sourceRef="SendTask_RequestApproved" targetRef="ExclusiveGateway_6" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_19" name="19" sourceRef="SendTask_CriticalTimezoneData" targetRef="ExclusiveGateway_6" />
     <bpmn:sendTask id="SendTask_EmployeeData" name="Employee Data" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_EmployeeData">
       <bpmn:incoming>ERP_SequenceFlow_6</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_7</bpmn:outgoing>
@@ -208,6 +197,27 @@
       <bpmn:outgoing>ERP_SequenceFlow_2</bpmn:outgoing>
       <bpmn:outgoing>ERP_SequenceFlow_4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ServiceTask_InsertRequestToDB" name="Insert Request To DB" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_InsertRequestToDB">
+      <bpmn:incoming>ERP_SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_8" name="8" sourceRef="MessageEvent_RequestVacationData" targetRef="ServiceTask_InsertRequestToDB" />
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_9" name="9" sourceRef="ServiceTask_InsertRequestToDB" targetRef="ServiceTask_CheckAvailableDays" />
+    <bpmn:endEvent id="ERP_EndEvent_1">
+      <bpmn:incoming>ERP_SequenceFlow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_11" name="No: 11" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_RequestDeclined">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_VACATIONDAYS == 30}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_12" name="12" sourceRef="ServiceTask_RequestDeclined" targetRef="SendTask_RequestDeclined" />
+    <bpmn:serviceTask id="ServiceTask_RequestDeclined" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.erp.ServiceTask_RequestDeclined">
+      <bpmn:incoming>ERP_SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="SendTask_RequestDeclined" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_RequestDeclined">
+      <bpmn:incoming>ERP_SequenceFlow_12</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_13</bpmn:outgoing>
+    </bpmn:sendTask>
   </bpmn:process>
   <bpmn:message id="Message_0lw0d7q" name="Load Employee Data" />
   <bpmn:message id="Message_08p4u7i" name="Employee Data" />
@@ -479,7 +489,35 @@
       <bpmndi:BPMNShape id="Participant_1o0hms1_di" bpmnElement="Participant_1o0hms1" isHorizontal="true">
         <dc:Bounds x="160" y="490" width="1630" height="330" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0y8qe9d_di" bpmnElement="ERP_SequenceFlow_17">
+      <bpmndi:BPMNEdge id="Flow_1wd91lm_di" bpmnElement="ERP_SequenceFlow_12">
+        <di:waypoint x="1220" y="550" />
+        <di:waypoint x="1290" y="550" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1249" y="532" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kusld5_di" bpmnElement="ERP_SequenceFlow_11">
+        <di:waypoint x="1090" y="585" />
+        <di:waypoint x="1090" y="550" />
+        <di:waypoint x="1120" y="550" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1050" y="558" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07emy9a_di" bpmnElement="ERP_SequenceFlow_9">
+        <di:waypoint x="970" y="700" />
+        <di:waypoint x="970" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sqcx02_di" bpmnElement="ERP_SequenceFlow_8">
+        <di:waypoint x="878" y="610" />
+        <di:waypoint x="899" y="610" />
+        <di:waypoint x="899" y="740" />
+        <di:waypoint x="920" y="740" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="911" y="672" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y8qe9d_di" bpmnElement="ERP_SequenceFlow_19">
         <di:waypoint x="1520" y="750" />
         <di:waypoint x="1600" y="750" />
         <di:waypoint x="1600" y="705" />
@@ -487,7 +525,7 @@
           <dc:Bounds x="1554" y="732" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0sj4lrq_di" bpmnElement="ERP_SequenceFlow_15">
+      <bpmndi:BPMNEdge id="Flow_0sj4lrq_di" bpmnElement="ERP_SequenceFlow_17">
         <di:waypoint x="1520" y="610" />
         <di:waypoint x="1600" y="610" />
         <di:waypoint x="1600" y="655" />
@@ -495,14 +533,14 @@
           <dc:Bounds x="1554" y="592" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1hvfjk0_di" bpmnElement="ERP_SequenceFlow_18">
+      <bpmndi:BPMNEdge id="Flow_1hvfjk0_di" bpmnElement="ERP_SequenceFlow_20">
         <di:waypoint x="1625" y="680" />
         <di:waypoint x="1692" y="680" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1652" y="662" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1gtgpwr_di" bpmnElement="ERP_SequenceFlow_16">
+      <bpmndi:BPMNEdge id="Flow_1gtgpwr_di" bpmnElement="ERP_SequenceFlow_18">
         <di:waypoint x="1290" y="705" />
         <di:waypoint x="1290" y="750" />
         <di:waypoint x="1420" y="750" />
@@ -510,7 +548,7 @@
           <dc:Bounds x="1311" y="753" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1us5dts_di" bpmnElement="ERP_SequenceFlow_14">
+      <bpmndi:BPMNEdge id="Flow_1us5dts_di" bpmnElement="ERP_SequenceFlow_16">
         <di:waypoint x="1290" y="655" />
         <di:waypoint x="1290" y="610" />
         <di:waypoint x="1420" y="610" />
@@ -518,11 +556,11 @@
           <dc:Bounds x="1302" y="593" width="33" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0eyh3ey_di" bpmnElement="ERP_SequenceFlow_13">
+      <bpmndi:BPMNEdge id="Flow_0eyh3ey_di" bpmnElement="ERP_SequenceFlow_15">
         <di:waypoint x="1220" y="680" />
         <di:waypoint x="1265" y="680" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1248" y="662" width="13" height="14" />
+          <dc:Bounds x="1249" y="662" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1sntzdf_di" bpmnElement="ERP_SequenceFlow_6">
@@ -582,29 +620,14 @@
           <dc:Bounds x="800" y="602" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_060j4de_di" bpmnElement="ERP_SequenceFlow_8">
-        <di:waypoint x="878" y="610" />
-        <di:waypoint x="920" y="610" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="896" y="592" width="7" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1p05nqb_di" bpmnElement="ERP_SequenceFlow_9">
+      <bpmndi:BPMNEdge id="Flow_1p05nqb_di" bpmnElement="ERP_SequenceFlow_10">
         <di:waypoint x="1020" y="610" />
         <di:waypoint x="1065" y="610" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1039" y="592" width="7" height="14" />
+          <dc:Bounds x="1036" y="592" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_03y14zb_di" bpmnElement="ERP_SequenceFlow_10">
-        <di:waypoint x="1090" y="585" />
-        <di:waypoint x="1090" y="550" />
-        <di:waypoint x="1120" y="550" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1049" y="553" width="33" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_057ll01_di" bpmnElement="ERP_SequenceFlow_12">
+      <bpmndi:BPMNEdge id="Flow_057ll01_di" bpmnElement="ERP_SequenceFlow_14">
         <di:waypoint x="1090" y="635" />
         <di:waypoint x="1090" y="680" />
         <di:waypoint x="1120" y="680" />
@@ -612,11 +635,11 @@
           <dc:Bounds x="1047" y="654" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_19c892u_di" bpmnElement="ERP_SequenceFlow_11">
-        <di:waypoint x="1220" y="550" />
-        <di:waypoint x="1272" y="550" />
+      <bpmndi:BPMNEdge id="Flow_19c892u_di" bpmnElement="ERP_SequenceFlow_13">
+        <di:waypoint x="1390" y="550" />
+        <di:waypoint x="1572" y="550" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1241" y="532" width="12" height="14" />
+          <dc:Bounds x="1475" y="532" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0cm5pbu_di" bpmnElement="MessageEvent_LoadEmployeeData">
@@ -637,7 +660,7 @@
       <bpmndi:BPMNShape id="Event_0kanzv8_di" bpmnElement="MessageEvent_RequestVacationData">
         <dc:Bounds x="842" y="592" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="817" y="635" width="87" height="27" />
+          <dc:Bounds x="816.5" y="637.5" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_08usjkm_di" bpmnElement="ServiceTask_CheckAvailableDays">
@@ -648,12 +671,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1120" y="613" width="79" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_083uo8q_di" bpmnElement="ERP_EndEvent_1">
-        <dc:Bounds x="1272" y="532" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rayytu_di" bpmnElement="SendTask_RequestDeclined">
-        <dc:Bounds x="1120" y="510" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1t2lpip_di" bpmnElement="SendTask_RequestApproved">
         <dc:Bounds x="1420" y="570" width="100" height="80" />
@@ -684,6 +701,18 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="345" y="596" width="56" height="27" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ayleci_di" bpmnElement="ServiceTask_InsertRequestToDB">
+        <dc:Bounds x="920" y="700" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_083uo8q_di" bpmnElement="ERP_EndEvent_1">
+        <dc:Bounds x="1572" y="532" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ym1wa7_di" bpmnElement="ServiceTask_RequestDeclined">
+        <dc:Bounds x="1120" y="510" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rayytu_di" bpmnElement="SendTask_RequestDeclined">
+        <dc:Bounds x="1290" y="510" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_038bk6v_di" bpmnElement="Participant_038bk6v" isHorizontal="true">
         <dc:Bounds x="720" y="870" width="1070" height="360" />
@@ -915,12 +944,10 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1u3iosl_di" bpmnElement="ERPToEmployee_MessageFlow_2">
-        <di:waypoint x="1170" y="510" />
-        <di:waypoint x="1170" y="400" />
-        <di:waypoint x="1340" y="400" />
+        <di:waypoint x="1340" y="510" />
         <di:waypoint x="1340" y="358" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1186" y="453" width="7" height="14" />
+          <dc:Bounds x="1356" y="434" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_077z5kh_di" bpmnElement="ERPToEmployee_MessageFlow_3">

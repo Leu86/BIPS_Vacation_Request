@@ -6,6 +6,7 @@ import org.camunda.bpm.application.impl.ServletProcessApplication;
 /**
  * Process Application exposing this application's resources the process engine.
  */
+@SuppressWarnings("deprecation")
 @ProcessApplication("Vacation Request App")
 public class VacationRequestApplication extends ServletProcessApplication {
   public VacationRequestApplication() throws Exception {
