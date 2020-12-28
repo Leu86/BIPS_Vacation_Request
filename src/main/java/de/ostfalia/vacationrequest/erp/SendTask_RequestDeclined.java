@@ -11,6 +11,7 @@ public class SendTask_RequestDeclined implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("REQUEST_DECISION", execution.getVariable("REQUEST_DECISION"));
+        hashMap.put("EMPLOYEE_VACATIONDAYS", execution.getVariable("EMPLOYEE_VACATIONDAYS"));
 
         String key = (String) execution.getVariable("DEMO_BUSINESS_KEY");
         RuntimeService runtimeService = execution.getProcessEngineServices().getRuntimeService();
