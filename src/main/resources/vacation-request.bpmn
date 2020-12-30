@@ -142,10 +142,6 @@
       <bpmn:incoming>ERP_SequenceFlow_14</bpmn:incoming>
       <bpmn:outgoing>ERP_SequenceFlow_15</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sendTask id="SendTask_CriticalTimezoneData" name="Critical Timezone Data" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_CriticalTimezoneData">
-      <bpmn:incoming>ERP_SequenceFlow_18</bpmn:incoming>
-      <bpmn:outgoing>ERP_SequenceFlow_19</bpmn:outgoing>
-    </bpmn:sendTask>
     <bpmn:sequenceFlow id="ERP_SequenceFlow_13" name="13" sourceRef="SendTask_RequestDeclined" targetRef="ERP_EndEvent_1" />
     <bpmn:sequenceFlow id="ERP_SequenceFlow_14" name="14: Yes" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_CheckCriticalTimezone">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_VACATIONDAYS &gt;= 0}</bpmn:conditionExpression>
@@ -177,7 +173,7 @@
     <bpmn:endEvent id="ERP_EndEvent_1">
       <bpmn:incoming>ERP_SequenceFlow_13</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="ERP_SequenceFlow_11" name="No: 11" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_RequestDeclined">
+    <bpmn:sequenceFlow id="ERP_SequenceFlow_11" name="11: No" sourceRef="ExclusiveGateway_3" targetRef="ServiceTask_RequestDeclined">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_VACATIONDAYS &lt; 0}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="ERP_SequenceFlow_12" name="12" sourceRef="ServiceTask_RequestDeclined" targetRef="SendTask_RequestDeclined" />
@@ -222,6 +218,10 @@
       <bpmn:outgoing>ERP_SequenceFlow_8</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1ifyu9y" messageRef="Message_1lr16pi" />
     </bpmn:intermediateCatchEvent>
+    <bpmn:sendTask id="SendTask_CriticalTimezoneData" name="Critical Timezone Data" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="de.ostfalia.vacationrequest.erp.SendTask_CriticalTimezoneData">
+      <bpmn:incoming>ERP_SequenceFlow_18</bpmn:incoming>
+      <bpmn:outgoing>ERP_SequenceFlow_19</bpmn:outgoing>
+    </bpmn:sendTask>
   </bpmn:process>
   <bpmn:message id="Message_0lw0d7q" name="Load Employee Data" />
   <bpmn:message id="Message_08p4u7i" name="Employee Data" />
@@ -229,48 +229,45 @@
     <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_1" name="1" sourceRef="MessageEvent_CriticalTimezoneData" targetRef="ServiceTask_LoadProjectData" />
     <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_2" name="2" sourceRef="ServiceTask_LoadProjectData" targetRef="UserTask_ShowProjectData" />
     <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_3" name="3" sourceRef="UserTask_ShowProjectData" targetRef="ExclusiveGateway_7" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_4" name="4: No" sourceRef="ExclusiveGateway_7" targetRef="SendTask_RequestDeclined2" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_6" name="6: Yes" sourceRef="ExclusiveGateway_7" targetRef="ExclusiveGateway_8">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_7" name="7: Yes" sourceRef="ExclusiveGateway_7" targetRef="ExclusiveGateway_8">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${REQUESTVACATION_APPROVED}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_7" name="7: Yes" sourceRef="ExclusiveGateway_8" targetRef="SendTask_RequestApproved2" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_9" name="9: No" sourceRef="ExclusiveGateway_8" targetRef="SendTask_AskSupervisor">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_8" name="8: Yes" sourceRef="ExclusiveGateway_8" targetRef="SendTask_RequestApproved2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${REQUESTVACATION_BUSINESSDAYS &lt;= 20}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_5" name="5" sourceRef="SendTask_RequestDeclined2" targetRef="ExclusiveGateway_9" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_8" name="8" sourceRef="SendTask_RequestApproved2" targetRef="ExclusiveGateway_9" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_10" name="10" sourceRef="SendTask_AskSupervisor" targetRef="ExclusiveGateway_9" />
-    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_11" name="11" sourceRef="ExclusiveGateway_9" targetRef="TeamLeader_EndEvent_1" />
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_10" name="10: No" sourceRef="ExclusiveGateway_8" targetRef="SendTask_AskSupervisor">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${REQUESTVACATION_BUSINESSDAYS &gt; 20}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_6" name="6" sourceRef="SendTask_RequestDeclined2" targetRef="ExclusiveGateway_9" />
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_9" name="9" sourceRef="SendTask_RequestApproved2" targetRef="ExclusiveGateway_9" />
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_11" name="11" sourceRef="SendTask_AskSupervisor" targetRef="ExclusiveGateway_9" />
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_12" name="12" sourceRef="ExclusiveGateway_9" targetRef="TeamLeader_EndEvent_1" />
     <bpmn:sendTask id="SendTask_AskSupervisor" name="Ask Supervisor" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="de.ostfalia.vacationrequest.john.SendTask_AskSupervisor">
-      <bpmn:incoming>TeamLeader_SequenceFlow_9</bpmn:incoming>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_10</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:sendTask id="SendTask_RequestApproved2" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.john.SendTask_RequestApproved2">
-      <bpmn:incoming>TeamLeader_SequenceFlow_7</bpmn:incoming>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_8</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:endEvent id="TeamLeader_EndEvent_1">
-      <bpmn:incoming>TeamLeader_SequenceFlow_11</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_9">
-      <bpmn:incoming>TeamLeader_SequenceFlow_5</bpmn:incoming>
-      <bpmn:incoming>TeamLeader_SequenceFlow_8</bpmn:incoming>
       <bpmn:incoming>TeamLeader_SequenceFlow_10</bpmn:incoming>
       <bpmn:outgoing>TeamLeader_SequenceFlow_11</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_8" name="Days &#60;= 20?" default="TeamLeader_SequenceFlow_7">
-      <bpmn:incoming>TeamLeader_SequenceFlow_6</bpmn:incoming>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_7</bpmn:outgoing>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_9</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sendTask id="SendTask_RequestDeclined2" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.john.SendTask_RequestDeclined2">
-      <bpmn:incoming>TeamLeader_SequenceFlow_4</bpmn:incoming>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_5</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_7" name="Enough Employees Available?" default="TeamLeader_SequenceFlow_4">
+    <bpmn:sendTask id="SendTask_RequestApproved2" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.john.SendTask_RequestApproved">
+      <bpmn:incoming>TeamLeader_SequenceFlow_8</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_9</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="TeamLeader_EndEvent_1">
+      <bpmn:incoming>TeamLeader_SequenceFlow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_9">
+      <bpmn:incoming>TeamLeader_SequenceFlow_6</bpmn:incoming>
+      <bpmn:incoming>TeamLeader_SequenceFlow_9</bpmn:incoming>
+      <bpmn:incoming>TeamLeader_SequenceFlow_11</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_8" name="Businessdays &#60;= 20?">
+      <bpmn:incoming>TeamLeader_SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_8</bpmn:outgoing>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_7" name="Enough Employees Available?">
       <bpmn:incoming>TeamLeader_SequenceFlow_3</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_7</bpmn:outgoing>
       <bpmn:outgoing>TeamLeader_SequenceFlow_4</bpmn:outgoing>
-      <bpmn:outgoing>TeamLeader_SequenceFlow_6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="UserTask_ShowProjectData" name="Show Project Data" camunda:formKey="embedded:app:forms/john/UserTask_ShowProjectData.html" camunda:assignee="John">
       <bpmn:incoming>TeamLeader_SequenceFlow_2</bpmn:incoming>
@@ -284,6 +281,18 @@
       <bpmn:outgoing>TeamLeader_SequenceFlow_1</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_07q5jej" messageRef="Message_1ib9ncz" />
     </bpmn:startEvent>
+    <bpmn:sendTask id="SendTask_RequestDeclined2" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.john.SendTask_RequestDeclined">
+      <bpmn:incoming>TeamLeader_SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_6</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="ServiceTask_RequestDeclined2" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.john.ServiceTask_RequestDeclined">
+      <bpmn:incoming>TeamLeader_SequenceFlow_4</bpmn:incoming>
+      <bpmn:outgoing>TeamLeader_SequenceFlow_5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_4" name="4: No" sourceRef="ExclusiveGateway_7" targetRef="ServiceTask_RequestDeclined2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!REQUESTVACATION_APPROVED}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="TeamLeader_SequenceFlow_5" name="5" sourceRef="ServiceTask_RequestDeclined2" targetRef="SendTask_RequestDeclined2" />
   </bpmn:process>
   <bpmn:process id="Supervisor_ProcessPool" isExecutable="true" camunda:isStartableInTasklist="false">
     <bpmn:startEvent id="MessageEvent_AskSupervisor" name="Ask Supervisor" camunda:asyncBefore="true" camunda:asyncAfter="true">
@@ -294,36 +303,43 @@
       <bpmn:incoming>Supervisor_SequenceFlow_1</bpmn:incoming>
       <bpmn:outgoing>Supervisor_SequenceFlow_2</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="ExclusiveGateway_10" name="Give Approval?" default="Supervisor_SequenceFlow_3">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_10" name="Give Approval?">
       <bpmn:incoming>Supervisor_SequenceFlow_2</bpmn:incoming>
       <bpmn:outgoing>Supervisor_SequenceFlow_3</bpmn:outgoing>
       <bpmn:outgoing>Supervisor_SequenceFlow_5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="ExclusiveGateway_11">
       <bpmn:incoming>Supervisor_SequenceFlow_4</bpmn:incoming>
-      <bpmn:incoming>Supervisor_SequenceFlow_6</bpmn:incoming>
-      <bpmn:outgoing>Supervisor_SequenceFlow_7</bpmn:outgoing>
+      <bpmn:incoming>Supervisor_SequenceFlow_7</bpmn:incoming>
+      <bpmn:outgoing>Supervisor_SequenceFlow_8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="Supervisor_EndEvent_1">
-      <bpmn:incoming>Supervisor_SequenceFlow_7</bpmn:incoming>
+      <bpmn:incoming>Supervisor_SequenceFlow_8</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sendTask id="SendTask_RequestApproved3" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.mary.SendTask_RequestApproved3">
+    <bpmn:sendTask id="SendTask_RequestApproved3" name="Request Approved" camunda:class="de.ostfalia.vacationrequest.mary.SendTask_RequestApproved">
       <bpmn:incoming>Supervisor_SequenceFlow_3</bpmn:incoming>
       <bpmn:outgoing>Supervisor_SequenceFlow_4</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:sendTask id="SendTask_RequestDeclined3" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.mary.SendTask_RequestDeclined3">
-      <bpmn:incoming>Supervisor_SequenceFlow_5</bpmn:incoming>
-      <bpmn:outgoing>Supervisor_SequenceFlow_6</bpmn:outgoing>
-    </bpmn:sendTask>
     <bpmn:sequenceFlow id="Supervisor_SequenceFlow_1" name="1" sourceRef="MessageEvent_AskSupervisor" targetRef="UserTask_GiveApproval" />
     <bpmn:sequenceFlow id="Supervisor_SequenceFlow_2" name="2" sourceRef="UserTask_GiveApproval" targetRef="ExclusiveGateway_10" />
-    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_3" name="3: Yes" sourceRef="ExclusiveGateway_10" targetRef="SendTask_RequestApproved3" />
-    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_5" name="5: No" sourceRef="ExclusiveGateway_10" targetRef="SendTask_RequestDeclined3">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${EMPLOYEE_ID == -1}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_3" name="3: Yes" sourceRef="ExclusiveGateway_10" targetRef="SendTask_RequestApproved3">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${REQUESTVACATION_APPROVED}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Supervisor_SequenceFlow_4" name="4" sourceRef="SendTask_RequestApproved3" targetRef="ExclusiveGateway_11" />
-    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_6" name="6" sourceRef="SendTask_RequestDeclined3" targetRef="ExclusiveGateway_11" />
-    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_7" name="7" sourceRef="ExclusiveGateway_11" targetRef="Supervisor_EndEvent_1" />
+    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_7" name="7" sourceRef="SendTask_RequestDeclined3" targetRef="ExclusiveGateway_11" />
+    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_8" name="8" sourceRef="ExclusiveGateway_11" targetRef="Supervisor_EndEvent_1" />
+    <bpmn:sendTask id="SendTask_RequestDeclined3" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.mary.SendTask_RequestDeclined">
+      <bpmn:incoming>Supervisor_SequenceFlow_6</bpmn:incoming>
+      <bpmn:outgoing>Supervisor_SequenceFlow_7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_5" name="5: No" sourceRef="ExclusiveGateway_10" targetRef="ServiceTask_RequestDeclined3">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!REQUESTVACATION_APPROVED}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Supervisor_SequenceFlow_6" name="6" sourceRef="ServiceTask_RequestDeclined3" targetRef="SendTask_RequestDeclined3" />
+    <bpmn:serviceTask id="ServiceTask_RequestDeclined3" name="Request Declined" camunda:class="de.ostfalia.vacationrequest.mary.ServiceTask_RequestDeclined">
+      <bpmn:incoming>Supervisor_SequenceFlow_5</bpmn:incoming>
+      <bpmn:outgoing>Supervisor_SequenceFlow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_1lr16pi" name="Request Vacation Data" />
   <bpmn:message id="Message_0g64lue" name="Request Declined" />
@@ -554,11 +570,11 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0y8qe9d_di" bpmnElement="ERP_SequenceFlow_19">
-        <di:waypoint x="1520" y="750" />
-        <di:waypoint x="1600" y="750" />
+        <di:waypoint x="1520" y="760" />
+        <di:waypoint x="1600" y="760" />
         <di:waypoint x="1600" y="705" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1554" y="732" width="13" height="14" />
+          <dc:Bounds x="1554" y="742" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0sj4lrq_di" bpmnElement="ERP_SequenceFlow_17">
@@ -578,10 +594,10 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1gtgpwr_di" bpmnElement="ERP_SequenceFlow_18">
         <di:waypoint x="1290" y="705" />
-        <di:waypoint x="1290" y="750" />
-        <di:waypoint x="1420" y="750" />
+        <di:waypoint x="1290" y="760" />
+        <di:waypoint x="1420" y="760" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1311" y="753" width="37" height="14" />
+          <dc:Bounds x="1311" y="763" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1us5dts_di" bpmnElement="ERP_SequenceFlow_16">
@@ -669,9 +685,6 @@
       <bpmndi:BPMNShape id="Activity_1p2m8xt_di" bpmnElement="ServiceTask_CheckCriticalTimezone">
         <dc:Bounds x="1120" y="640" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_05ll8al_di" bpmnElement="SendTask_CriticalTimezoneData">
-        <dc:Bounds x="1420" y="710" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0fl09lq_di" bpmnElement="SendTask_EmployeeData">
         <dc:Bounds x="690" y="580" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -714,67 +727,74 @@
           <dc:Bounds x="806" y="641" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05ll8al_di" bpmnElement="SendTask_CriticalTimezoneData">
+        <dc:Bounds x="1420" y="720" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_038bk6v_di" bpmnElement="Participant_038bk6v" isHorizontal="true">
         <dc:Bounds x="720" y="870" width="1070" height="360" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1ow3e8m_di" bpmnElement="TeamLeader_SequenceFlow_11">
+      <bpmndi:BPMNEdge id="Flow_04yqe72_di" bpmnElement="TeamLeader_SequenceFlow_5">
+        <di:waypoint x="1390" y="950" />
+        <di:waypoint x="1430" y="950" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00a9b4i_di" bpmnElement="TeamLeader_SequenceFlow_4">
+        <di:waypoint x="1255" y="950" />
+        <di:waypoint x="1290" y="950" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1247" y="923" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ow3e8m_di" bpmnElement="TeamLeader_SequenceFlow_12">
         <di:waypoint x="1585" y="1060" />
         <di:waypoint x="1702" y="1060" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1638" y="1042" width="12" height="14" />
+          <dc:Bounds x="1638" y="1042" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_07c47g6_di" bpmnElement="TeamLeader_SequenceFlow_10">
+      <bpmndi:BPMNEdge id="Flow_07c47g6_di" bpmnElement="TeamLeader_SequenceFlow_11">
         <di:waypoint x="1470" y="1170" />
         <di:waypoint x="1560" y="1170" />
         <di:waypoint x="1560" y="1085" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1509" y="1152" width="13" height="14" />
+          <dc:Bounds x="1510" y="1152" width="12" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0qs94i8_di" bpmnElement="TeamLeader_SequenceFlow_8">
+      <bpmndi:BPMNEdge id="Flow_0qs94i8_di" bpmnElement="TeamLeader_SequenceFlow_9">
         <di:waypoint x="1470" y="1060" />
         <di:waypoint x="1535" y="1060" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1499" y="1042" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0lt5zui_di" bpmnElement="TeamLeader_SequenceFlow_5">
-        <di:waypoint x="1420" y="950" />
+      <bpmndi:BPMNEdge id="Flow_0lt5zui_di" bpmnElement="TeamLeader_SequenceFlow_6">
+        <di:waypoint x="1530" y="950" />
         <di:waypoint x="1560" y="950" />
         <di:waypoint x="1560" y="1035" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1487" y="932" width="7" height="14" />
+          <dc:Bounds x="1566" y="963" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_07rt7xm_di" bpmnElement="TeamLeader_SequenceFlow_9">
+      <bpmndi:BPMNEdge id="Flow_07rt7xm_di" bpmnElement="TeamLeader_SequenceFlow_10">
         <di:waypoint x="1290" y="1085" />
         <di:waypoint x="1290" y="1170" />
         <di:waypoint x="1370" y="1170" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1305" y="1153" width="27" height="14" />
+          <dc:Bounds x="1302" y="1153" width="33" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rcc113_di" bpmnElement="TeamLeader_SequenceFlow_7">
+      <bpmndi:BPMNEdge id="Flow_1rcc113_di" bpmnElement="TeamLeader_SequenceFlow_8">
         <di:waypoint x="1315" y="1060" />
         <di:waypoint x="1370" y="1060" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1327" y="1042" width="31" height="14" />
+          <dc:Bounds x="1324" y="1073" width="31" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1iokcla_di" bpmnElement="TeamLeader_SequenceFlow_6">
+      <bpmndi:BPMNEdge id="Flow_1iokcla_di" bpmnElement="TeamLeader_SequenceFlow_7">
         <di:waypoint x="1230" y="975" />
         <di:waypoint x="1230" y="1060" />
         <di:waypoint x="1265" y="1060" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1194" y="1015" width="31" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1gl0vl2_di" bpmnElement="TeamLeader_SequenceFlow_4">
-        <di:waypoint x="1255" y="950" />
-        <di:waypoint x="1320" y="950" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1275" y="932" width="27" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0usvo1v_di" bpmnElement="TeamLeader_SequenceFlow_3">
@@ -813,11 +833,8 @@
       <bpmndi:BPMNShape id="Gateway_04hpcqj_di" bpmnElement="ExclusiveGateway_8" isMarkerVisible="true">
         <dc:Bounds x="1265" y="1035" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1223" y="1083" width="63" height="14" />
+          <dc:Bounds x="1257" y="1008" width="85" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ywdyl2_di" bpmnElement="SendTask_RequestDeclined2">
-        <dc:Bounds x="1320" y="910" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0v3zjfs_di" bpmnElement="ExclusiveGateway_7" isMarkerVisible="true">
         <dc:Bounds x="1205" y="925" width="50" height="50" />
@@ -837,22 +854,41 @@
           <dc:Bounds x="768" y="975" width="85" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ywdyl2_di" bpmnElement="SendTask_RequestDeclined2">
+        <dc:Bounds x="1430" y="910" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vdddu3_di" bpmnElement="ServiceTask_RequestDeclined2">
+        <dc:Bounds x="1290" y="910" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0zjl7dq_di" bpmnElement="Participant_0zjl7dq" isHorizontal="true">
         <dc:Bounds x="1020" y="1270" width="770" height="240" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_19b2hub_di" bpmnElement="Supervisor_SequenceFlow_7">
+      <bpmndi:BPMNEdge id="Flow_1hn4o0p_di" bpmnElement="Supervisor_SequenceFlow_6">
+        <di:waypoint x="1450" y="1450" />
+        <di:waypoint x="1490" y="1450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dy9zo0_di" bpmnElement="Supervisor_SequenceFlow_5">
+        <di:waypoint x="1350" y="1365" />
+        <di:waypoint x="1350" y="1388" />
+        <di:waypoint x="1400" y="1388" />
+        <di:waypoint x="1400" y="1410" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1362" y="1370" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19b2hub_di" bpmnElement="Supervisor_SequenceFlow_8">
         <di:waypoint x="1635" y="1340" />
         <di:waypoint x="1692" y="1340" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1660" y="1322" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1yr6ixd_di" bpmnElement="Supervisor_SequenceFlow_6">
-        <di:waypoint x="1530" y="1450" />
+      <bpmndi:BPMNEdge id="Flow_1yr6ixd_di" bpmnElement="Supervisor_SequenceFlow_7">
+        <di:waypoint x="1590" y="1450" />
         <di:waypoint x="1610" y="1450" />
         <di:waypoint x="1610" y="1365" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1567" y="1432" width="7" height="14" />
+          <dc:Bounds x="1626" y="1405" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0mfxy3e_di" bpmnElement="Supervisor_SequenceFlow_4">
@@ -860,14 +896,6 @@
         <di:waypoint x="1585" y="1340" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1554" y="1322" width="7" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_02cue9n_di" bpmnElement="Supervisor_SequenceFlow_5">
-        <di:waypoint x="1350" y="1365" />
-        <di:waypoint x="1350" y="1450" />
-        <di:waypoint x="1430" y="1450" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1352" y="1405" width="27" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1v57kkp_di" bpmnElement="Supervisor_SequenceFlow_3">
@@ -916,7 +944,10 @@
         <dc:Bounds x="1430" y="1300" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_03ltsmd_di" bpmnElement="SendTask_RequestDeclined3">
-        <dc:Bounds x="1430" y="1410" width="100" height="80" />
+        <dc:Bounds x="1490" y="1410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yd95jf_di" bpmnElement="ServiceTask_RequestDeclined3">
+        <dc:Bounds x="1350" y="1410" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1upj1pm_di" bpmnElement="EmployeeToERP_MessageFlow_1">
         <di:waypoint x="640" y="250" />
@@ -962,7 +993,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0t44d0f_di" bpmnElement="ERPToTeamLeader_MessageFlow_1">
-        <di:waypoint x="1470" y="790" />
+        <di:waypoint x="1470" y="800" />
         <di:waypoint x="1470" y="860" />
         <di:waypoint x="810" y="860" />
         <di:waypoint x="810" y="932" />
@@ -971,25 +1002,25 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_03907fk_di" bpmnElement="TeamLeaderToEmployee_MessageFlow_1">
-        <di:waypoint x="1340" y="910" />
-        <di:waypoint x="1340" y="890" />
+        <di:waypoint x="1480" y="910" />
+        <di:waypoint x="1480" y="890" />
         <di:waypoint x="1940" y="890" />
         <di:waypoint x="1940" y="400" />
         <di:waypoint x="1340" y="400" />
         <di:waypoint x="1340" y="358" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1866" y="863" width="7" height="14" />
+          <dc:Bounds x="1883" y="863" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0zc2erx_di" bpmnElement="TeamLeaderToEmployee_MessageFlow_2">
         <di:waypoint x="1430" y="1020" />
-        <di:waypoint x="1430" y="920" />
-        <di:waypoint x="1980" y="920" />
+        <di:waypoint x="1430" y="1010" />
+        <di:waypoint x="1980" y="1010" />
         <di:waypoint x="1980" y="120" />
         <di:waypoint x="1340" y="120" />
         <di:waypoint x="1340" y="212" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1936" y="933" width="7" height="14" />
+          <dc:Bounds x="1936" y="983" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0i5d5pq_di" bpmnElement="TeamLeaderToSupervisor_MessageFlow_1">
@@ -1013,14 +1044,14 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1blum4n_di" bpmnElement="FSupervisorToEmployee_MessageFlow_2">
-        <di:waypoint x="1480" y="1490" />
-        <di:waypoint x="1480" y="1540" />
+        <di:waypoint x="1540" y="1490" />
+        <di:waypoint x="1540" y="1540" />
         <di:waypoint x="2070" y="1540" />
         <di:waypoint x="2070" y="380" />
         <di:waypoint x="1340" y="380" />
         <di:waypoint x="1340" y="358" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1896" y="1523" width="7" height="14" />
+          <dc:Bounds x="1913" y="1523" width="7" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

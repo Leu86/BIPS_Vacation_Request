@@ -38,7 +38,7 @@ public class ServiceTask_InsertRequestToDB implements JavaDelegate {
         resultSet.close();
 
         execution.setVariable("REQUESTVACATION_ID", idRequestVacation);
-        execution.setVariable("REQUESTVACATION_BUSINESSDAYS", requestVacationBusinessDays-requestVacationHolidays);
+        execution.setVariable("REQUESTVACATION_BUSINESSDAYS", (int) requestVacationBusinessDays - (int) requestVacationHolidays);
 
         String sql = "INSERT INTO `vacation_request`.`urlaubsantrag` (`idUrlaubsantrag`, `idMitarbeiter`, `Beginn`, `Ende`, `Kalendertage`, `Arbeitstage`, `Wochenendtage`, `Feiertage`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -48,7 +48,7 @@ public class ServiceTask_InsertRequestToDB implements JavaDelegate {
         callableStatement.setObject(3, java.sql.Date.valueOf(requestVacationStart));
         callableStatement.setObject(4, java.sql.Date.valueOf(requestVacationEnd));
         callableStatement.setLong(5, requestVacationDays);
-        callableStatement.setLong(6, requestVacationBusinessDays-requestVacationHolidays);
+        callableStatement.setInt(6, (int) execution.getVariable("REQUESTVACATION_BUSINESSDAYS"));
         callableStatement.setLong(7, requestVacationDays-requestVacationBusinessDays);
         callableStatement.setLong(8, requestVacationHolidays);
         callableStatement.executeUpdate();

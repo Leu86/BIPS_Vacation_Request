@@ -1,36 +1,30 @@
 <form name="ShowResultData" role="form">
     <div class="alert alert-info">
-        <p>Frau/Herr {{EMPLOYEE_SURNAME}}, Ihr Urlaubsantrag wurde {{REQUEST_DECISION}}.<br>
-        Sie haben noch {{EMPLOYEE_VACATIONDAYS}} Urlaubstage.</p>
+        <p>Frau/Herr <b>{{EMPLOYEE_FIRSTNAME}} {{EMPLOYEE_SURNAME}}</b>, Ihr Urlaubsantrag wurde <b>{{REQUEST_DECISION}}</b>.<br>
+        Ihnen stehen noch <b>{{EMPLOYEE_VACATIONDAYS}}</b> Urlaubstage zur Verf&#252;gung.</p>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2">Frau/Herr:</label>
-        <div class="col-sm-10">
-            <input type="text"
+        <input type="hidden"
+            class="form-control"
+            cam-variable-name="EMPLOYEE_FIRSTNAME"
+            cam-variable-type="String"/>           
+    </div>     
+    <div class="form-group">
+            <input type="hidden"
                 class="form-control"
                 cam-variable-name="EMPLOYEE_SURNAME"
-                cam-variable-type="String"
-                disabled/>
-        </div>            
+                cam-variable-type="String"/>           
     </div>   
     <div class="form-group">
-        <label class="control-label col-sm-2">Status:</label>
-        <div class="col-sm-10">
-            <input type="text"
+            <input type="hidden"
                 class="form-control"
                 cam-variable-name="REQUEST_DECISION"
-                cam-variable-type="String"
-                disabled/>
-        </div>
+                cam-variable-type="String"/>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2">Urlaubstage:</label>
-        <div class="col-sm-10">
-            <input type="text"
+            <input type="hidden"
                 class="form-control"
                 cam-variable-name="EMPLOYEE_VACATIONDAYS"
-                cam-variable-type="Integer"
-                disabled/>
-        </div>
+                cam-variable-type="Integer"/>
     </div>
 </form>

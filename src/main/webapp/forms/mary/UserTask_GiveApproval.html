@@ -1,1 +1,36 @@
-<!-- TO BE DONE -->
+<form name="GiveApproval" role="form">
+    <div class="alert alert-info">
+        <p>Frau/Herr <b>{{EMPLOYEE_FIRSTNAME}} {{EMPLOYEE_SURNAME}}</b> m&#246;chte Urlaub innerhalb der <b>{{VACATION_NAME}}</b> beantragen.</p>
+    </div>
+    <div class="form-group">
+        <input type="hidden"
+            class="form-control"
+            cam-variable-name="EMPLOYEE_FIRSTNAME"
+            cam-variable-type="String"/>
+        <input type="hidden"
+            class="form-control"
+            cam-variable-name="EMPLOYEE_SURNAME"
+            cam-variable-type="String"/>
+    </div>    
+    <div class="form-group">
+        <label>Betrifft:<br>{{REQUESTVACATION_BUSINESSDAYS}} Arbeitstage</label>
+            <input type="hidden"
+                class="form-control"
+                cam-variable-name="REQUESTVACATION_BUSINESSDAYS"
+                cam-variable-type="Integer"/>
+    </div>
+    <div class="form-group">
+        <input type="hidden"
+            class="form-control"
+            cam-variable-name="VACATION_NAME"
+            cam-variable-type="String"/>
+</div>    
+    <div class="form-group">
+        <label>Urlaubsantrag genehmigen:</label><br>
+            <select cam-variable-name="REQUESTVACATION_APPROVED"
+                    cam-variable-type="Boolean">
+                <option value="true">Ja</option>
+                <option value="false">Nein</option>
+            </select>
+    </div>    
+</form>

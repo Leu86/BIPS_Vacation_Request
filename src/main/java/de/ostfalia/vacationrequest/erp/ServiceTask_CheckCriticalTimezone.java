@@ -20,10 +20,11 @@ public class ServiceTask_CheckCriticalTimezone implements JavaDelegate {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (!resultSet.isBeforeFirst()) {
-           execution.setVariable("REQUESTVACATION_CRITICAL", false);
-        } else {
+        if (resultSet.next()) {
+            execution.setVariable("VACATION_NAME", resultSet.getString("Name"));
             execution.setVariable("REQUESTVACATION_CRITICAL", true);
+        } else {
+            execution.setVariable("REQUESTVACATION_CRITICAL", false);
         }
         resultSet.close();
         preparedStatement.close();

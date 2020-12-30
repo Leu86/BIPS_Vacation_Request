@@ -5,7 +5,6 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 import java.util.HashMap;
-
 public class SendTask_RequestDeclined implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {

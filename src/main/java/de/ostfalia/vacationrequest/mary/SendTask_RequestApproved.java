@@ -1,4 +1,4 @@
-package de.ostfalia.vacationrequest.erp;
+package de.ostfalia.vacationrequest.mary;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
